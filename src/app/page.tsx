@@ -10,6 +10,7 @@ type User = {
 
 export default function Home() {
   const [users, setUsers] = useState<User[]>([]);
+  const [name, setName] = useState('');
 
   useEffect(() => {
     fetchUsers();
@@ -21,6 +22,19 @@ export default function Home() {
     setUsers(data);
   }
 
+  async function handleAddUser() {
+    const response = await fetch('/api/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: users.length + 1, name }),
+    });
+    const newUser = await response.json();
+    setUsers([...users, newUser]);
+    setName('');
+  }
+
   return (
     <div className={styles.root}>
       <h1>Users</h1>
@@ -29,6 +43,8 @@ export default function Home() {
           <li key={user.id}>{user.name}</li>
         ))}
       </ul>
+      <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+      <button onClick={handleAddUser}>Add User</button>
     </div>
   );
 }
