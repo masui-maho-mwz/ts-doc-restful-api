@@ -23,3 +23,26 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
   return NextResponse.json({ error: 'User not found' }, { status: 404 });
 }
+
+// DELETE /api/users/[id]
+export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+  const id = parseInt(params.id);
+  const index = users.findIndex((user) => user.id === id);
+
+  if (index !== -1) {
+    users.splice(index, 1);
+    return NextResponse.json({ message: 'User deleted' });
+  }
+  return NextResponse.json({ error: 'User not found' }, { status: 404 });
+}
+
+// GET /api/users/[id]
+export async function GET(request: Request, { params }: { params: { id: string } }) {
+  const id = parseInt(params.id);
+  const user = users.find((user) => user.id === id);
+
+  if (user) {
+    return NextResponse.json(user);
+  }
+  return NextResponse.json({ error: 'User not found' }, { status: 404 });
+}

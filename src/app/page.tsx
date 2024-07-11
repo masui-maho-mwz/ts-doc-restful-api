@@ -87,6 +87,23 @@ export default function Home() {
     }
   }
 
+  async function handleDeleteUser(id: number) {
+    try {
+      const response = await fetch(`/api/users/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete user');
+      }
+
+      setUsers(users.filter((user) => user.id !== id));
+      setError(null);
+    } catch (error) {
+      setError('Failed to delete user. Please try again.');
+    }
+  }
+
   return (
     <div className={styles.root}>
       <h1>Users</h1>
@@ -109,6 +126,7 @@ export default function Home() {
                 <button onClick={() => handleEdit(user)}>Update</button>
               </>
             )}
+            <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
           </li>
         ))}
       </ul>
